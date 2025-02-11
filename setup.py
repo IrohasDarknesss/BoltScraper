@@ -3,9 +3,9 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 
 ext_modules = [
     Pybind11Extension(
-        "BoltScraper",  
-        ["BoltScraper.cpp"], 
-        libraries=["curl"],  
+        "BoltScraper",
+        ["BoltScraper.cpp"],
+        libraries=["curl"],
     ),
 ]
 
