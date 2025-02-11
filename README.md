@@ -1,32 +1,31 @@
 # BoltScraper
 BoltScraper is a lightning-fast, multithreaded web scraping library built with C++ and pybind11. It enables efficient data collection from multiple websites simultaneously, making it ideal for handling large-scale scraping tasks. 
 
-BoltScraperは、C++とpybind11で構築された超高速のマルチスレッド対応Webスクレイピングライブラリです。
-複数のウェブサイトから同時にデータを効率的に収集でき、大規模なスクレイピングタスクに最適です。
+## How to Install
 
-## インストール方法
-
-1. リポジトリをクローンするか、ソースコードをダウンロードしてください。
-2. `pybind11` と `libcurl` をインストールしてください。
+1. Clone the repository or download the source code.
+2. Install `pybind11` and `libcurl`.
    ```
    pip install pybind11
-   sudo apt-get install libcurl4-openssl-dev  # Ubuntu/Debianの場合
+   sudo apt-get install libcurl4-openssl-dev zlib1g-dev  # Ubuntu/Debianの場合
    ```
-3. 以下のコマンドでライブラリをビルドします。
+3. Build the library with the following command
    ```
    python setup.py build_ext --inplace
    ```
 
-## 使い方
+## How to use
 
-### 単一URLの取得
+### Obtaining a single URL
+```
 import BoltScraper
 
 content = BoltScraper.fetch_url('https://example.com')
 print(content)
+```
 
-
-### 複数URLの並列取得
+### Parallel acquisition of multiple URLs
+```
 import BoltScraper
 
 urls = [
@@ -38,8 +37,31 @@ urls = [
 contents = BoltScraper.fetch_urls(urls)
 
 for idx, page in enumerate(contents):
-    print(f"ページ {idx + 1} のコンテンツ:\n{page[:200]}\n")
+    try:
+        print(f"Contents of page {idx + 1}:\n{page[:200].encode('utf-8', errors='ignore').decode('utf-8')}\n")
+    except UnicodeDecodeError as e:
+        print(f"Decode error on page {idx + 1}: {e}")
+```
 
+### Performance Benchmarks
+```
+import BoltScraper
 
-## ライセンス
-このプロジェクトはMITライセンスの下で提供されています。
+urls = [
+    'https://example.com',
+    'https://www.python.org',
+    'https://www.github.com'
+]
+
+# BoltScraper Benchmarks
+print("Running BoltScraper Benchmark...")
+bolt_start = time.time()
+bolt_results = BoltScraper.fetch_urls(urls)
+bolt_end = time.time()
+
+print(f"BoltScraper - Total elapsed time: {bolt_end - bolt_start:.4f} s")
+print(f"BoltScraper - Average time per 1URL: {(bolt_end - bolt_start) / len(urls):.4f} s")
+```
+
+## License
+This project is provided under the MIT License.
